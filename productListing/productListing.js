@@ -7,7 +7,7 @@ const smartphones = [
     Memoria:  "512 GB",
     precoAvista: "R$10.799,10 à vista",
     precoParcelado: "R$11.999,00 em 18x R$666,61 sem juros",
-    imagem: "src/GalaxyS25Ultra.png"
+    imagem: "../src/GalaxyS25Ultra3.png"
   },
   { 
     id: 2, 
@@ -16,7 +16,7 @@ const smartphones = [
     Memoria:  "256 GB",
     precoAvista: "R$6.299,10 à vista",
     precoParcelado: "R$6.999,00 em 18x R$ 388,83 sem juros",
-    imagem: "src/GalaxyS25.png"
+    imagem: "../src/GalaxyS252.png"
   },
   { 
     id: 3, 
@@ -25,7 +25,7 @@ const smartphones = [
     Memoria:  "512 GB",
     precoAvista: "R$8.279,10 à vista",
     precoParcelado: "R$9.199,00 em 18x R$ 511,05 sem juros",
-    imagem: "src/GalaxyZFlip7.png"
+    imagem: "../src/GalaxyZFlip72.png"
   },
   { 
     id: 4, 
@@ -34,7 +34,7 @@ const smartphones = [
     Memoria:  "1 TB",
     precoAvista: "R$14.939,10 à vista",
     precoParcelado: "R$16.599,00 em 18x R$ 922,16 sem juros",
-    imagem: "src/GalaxyZFold7.png"
+    imagem: "../src/GalaxyZFold72.png"
   },
 ];
 
@@ -47,7 +47,7 @@ const notebooks = [
     Memoria:  "1TB SSD",
     precoAvista: "R$18.049,05 à vista",
     precoParcelado: "R$18.999,00 em 18x R$ 1.055,50 sem juros",
-    imagem: "src/GalaxyBook4Ultra2.png"
+    imagem: "../src/GalaxyBook4Ultra2.png"
   },
 ];
 
@@ -113,6 +113,21 @@ function adicionarAoCarrinho(produto) {
   alert(`${produto.nome} foi adicionado ao carrinho!`);
   console.log("Carrinho:", carrinho);
 }
+
+// Seleciona todos os botões de filtro
+const filtros = document.querySelectorAll('.menu-lateral .filtro');
+
+filtros.forEach(botao => {
+  botao.addEventListener('click', () => {
+    // Remove a classe ativo de todos
+    filtros.forEach(b => b.classList.remove('ativo'));
+    
+    // Adiciona a classe ativo no botão clicado
+    botao.classList.add('ativo');
+
+    console.log('Categoria selecionada:', botao.textContent);
+  });
+});
 
 // Filtros do menu lateral
 document.querySelectorAll(".filtro").forEach(botao => {
