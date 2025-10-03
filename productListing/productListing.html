@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estoque</title>
+  <link rel="stylesheet" href="productListing.css">
+</head>
+<body>
+  <div class="layout">
+    <!-- MENU LATERAL -->
+    <aside class="menu-lateral">
+      <h2>Produtos</h2>
+      <ul>
+        <li><button class="filtro" data-cat="todos">Todos</button></li>
+        <li><button class="filtro" data-cat="smartphones">Smartphones</button></li>
+        <li><button class="filtro" data-cat="notebooks">Notebooks</button></li>
+        <li><button class="filtro" data-cat="tablets">Tablets</button></li>
+        <li><button class="filtro" data-cat="acessorios">Acessórios</button></li>
+      </ul>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+      <div id="produtos-container" class="grid"></div>
+    </main>
+  </div>
+
+  <script src="productListing.js"></script>
+</body>
+</html>
