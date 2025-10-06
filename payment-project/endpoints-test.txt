@@ -1,0 +1,51 @@
+
+# USANDO THUNDER CLIENT
+
+Passo 1: Ver o Catálogo de Produtos
+
+Método: GET
+URL: http://127.0.0.1:5000/products
+
+-- O que esperar: Uma lista em formato JSON com todos os seus produtos (Galaxy S25 Ultra, Galaxy Buds2 Pro, etc.) e seus respectivos preços.
+
+Passo 2: Adicionar um "Galaxy S25" ao Carrinho
+
+Método: POST
+URL: http://127.0.0.1:5000/cart/add
+Body (JSON): Vá na aba "Body", selecione "JSON" e cole o seguinte:
+
+JSON:
+{
+    "product_id": "s25",
+    "quantity": 1
+}
+
+--O que esperar: Uma mensagem de sucesso confirmando que o produto foi adicionado.
+
+Passo 3: Adicionar um "Galaxy Watch8 Classic" ao Carrinho
+
+Método: POST
+URL: http://127.0.0.1:5000/cart/add (a mesma URL do passo anterior)
+Body (JSON): Altere o Body para este novo produto:
+
+JSON:
+{
+    "product_id": "watch8c",
+    "quantity": 1
+}
+
+--O que esperar: Uma mensagem de sucesso. O sistema deve adicionar este item ao mesmo carrinho.
+
+Passo 4: Conferir o Carrinho Completo e o Valor Total
+
+Método: GET
+URL: http://127.0.0.1:5000/cart
+
+--O que esperar: Um JSON mostrando a lista com os dois produtos que você adicionou (o Galaxy S25 e o Watch) e o total_price_brl com a soma correta dos preços dos dois.
+
+Passo 5: Finalizar a Compra (Ir para o Pagamento)
+
+Método: POST
+URL: http://127.0.0.1:5000/create-checkout-session
+
+-- O que esperar: A tela do Thunder Client vai mudar. Clique na aba "Preview" da resposta. Você deverá ver a página de checkout da Stripe carregada, com o valor total da sua compra pronto para ser pago.
