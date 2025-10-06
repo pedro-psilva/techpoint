@@ -54,7 +54,7 @@ const tablets = [
     Cor: "Grafite",
     Descricao:  "64 GB",
     precoAvista: "R$1.899,05 à vista",
-    precoParcelado: "R$1.999,00 em 18x R$ 111,50 sem juros",
+    precoParcelado: "R$1.999,00 em 18x R$ 111,05 sem juros",
     imagem: "../src/A9+5G.jpeg"
   }, 
   { 
@@ -91,7 +91,7 @@ const notebooks = [
     id: 10, 
     nome: "Galaxy Book4 Ultra", 
     Cor: "Grafite",
-    Descricao:  "1TB SSD",
+    Descricao:  "1 TB SSD",
     precoAvista: "R$18.049,05 à vista",
     precoParcelado: "R$18.999,00 em 18x R$ 1.055,50 sem juros",
     imagem: "../src/GalaxyBook4Ultra2.png"
@@ -100,7 +100,7 @@ const notebooks = [
     id: 11, 
     nome: "Galaxy Book3 360", 
     Cor: "Grafite",
-    Descricao:  "256 GB",
+    Descricao:  "256 GB SSD",
     precoAvista: "R$5.794,05 à vista",
     precoParcelado: "R$6.099,00 em 18x R$ 338,83 sem juros",
     imagem: "../src/3-360.webp"
@@ -109,7 +109,7 @@ const notebooks = [
     id: 12, 
     nome: "Galaxy Book4 360", 
     Cor: "Grafite",
-    Descricao:  "256GB SSD",
+    Descricao:  "1 TB SSD",
     precoAvista: "R$8.549,05 à vista",
     precoParcelado: "R$8.999,00 em 18x R$ 499,94 sem juros",
     imagem: "../src/4-360.webp"
