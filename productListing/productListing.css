@@ -20,17 +20,19 @@ body {
   color: var(--cinza-claro);
 }
 
-/* Layout com menu lateral */
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* Menu lateral */
 .menu-lateral {
   width: 220px;
   background: var(--cinza-claro);
   padding: 20px;
+  position: sticky; /* Menu lateral fixo */
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .menu-lateral h2 {
@@ -65,11 +67,10 @@ body {
 }
 
 .menu-lateral button.ativo {
-  background: var(--preto);  /* cor do botão selecionado */
+  background: var(--preto);
   color: var(--branco);
 }
 
-/* Conteúdo */
 .conteudo {
   flex: 1;
   padding: 20px;
@@ -81,16 +82,16 @@ body {
   color: var(--preto);
 }
 
-/* Grid dos cards */
+/* Grade dos produtos */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 240px); 
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
-  justify-content: center; 
+  justify-content: center;
+  align-items: stretch;
 }
 
-
-/* --- CARD --- */
+/* Card dos produtos */
 .card {
   background: var(--branco);
   border: none;
@@ -99,6 +100,9 @@ body {
   text-align: center;
   transition: transform 0.2s, box-shadow 0.3s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card:hover {
@@ -107,15 +111,13 @@ body {
 }
 
 .card img {
-  width: 100%;          /* ocupa toda a largura do card */
-  height: 180px;        /* altura fixa */
-  object-fit: contain;  /* mantém proporção sem cortar a imagem */
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
   border-radius: 8px;
-  background: var(--branco); /* fundo padrão atrás da imagem */
+  background: var(--branco);
   margin-bottom: 10px;
-  display: block;
 }
-
 
 .card h2 {
   font-size: 18px;
@@ -130,7 +132,6 @@ body {
   margin-bottom: 4px;
 }
 
-/* preço à vista */
 .card .preco-avista {
   font-size: 18px;
   font-weight: bold;
@@ -138,7 +139,6 @@ body {
   margin: 8px 0 4px;
 }
 
-/* preço parcelado */
 .card .preco-parcelado {
   font-size: 14px;
   color: var(--preto);
@@ -146,7 +146,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* botão */
 .btn-carrinho {
   background: var(--preto);
   color: var(--branco);
@@ -161,4 +160,21 @@ body {
 .btn-carrinho:hover {
   background: var(--cinza-escuro);
   transform: scale(1.05);
+}
+
+/* Responsividade: menu lateral e grid */
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
