@@ -1,5 +1,5 @@
 import stripe
-from flask import Blueprint, current_app, jsonify, redirect, render_template, request, session
+from flask import Blueprint, current_app, jsonify, redirect, render_template, request, session, url_for
 
 from app.models.catalog import PRODUCTS
 
@@ -160,7 +160,7 @@ def create_checkout_session():
             success_url=your_domain + '/success',
             cancel_url=your_domain + '/cancel',
         )
-        session.pop('cart', None)
+        # NÃO limpar o carrinho aqui - só limpar após pagamento bem-sucedido
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         import traceback
@@ -194,11 +194,14 @@ def show_product_page(product_id):
 
 @shop_bp.get("/success")
 def success():
+    # Limpar o carrinho apenas após pagamento bem-sucedido
+    session.pop('cart', None)
     return "<h1>Pagamento Aprovado!</h1>"
 
 
 @shop_bp.get("/cancel")
 def cancel():
-    return "<h1>Pagamento Cancelado.</h1>"
+    # Redirecionar para o carrinho quando o pagamento for cancelado
+    return redirect(url_for('shop.show_cart_page'))
 
 
