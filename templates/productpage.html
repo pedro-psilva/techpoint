@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='scripts/cep-validator.js') }}"></script>
     
 <style>
     :root {
@@ -129,9 +130,9 @@
     .benefits-content { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
     @media (max-width: 900px) { .benefits-content { grid-template-columns: 1fr; } }
     .benefits-list { color: var(--muted); display: grid; gap: 8px; margin: 0; padding-left: 18px; }
-    .benefits-badge { border: 1px dashed rgba(15,23,42,0.15); border-radius: 16px; padding: 24px; text-align: center; background: linear-gradient(180deg, rgba(15,110,253,.06), rgba(15,110,253,0)); }
-    .badge-text { font-weight: 800; letter-spacing: .06em; color: var(--ink); }
-    .badge-subtitle { color: var(--muted); font-size: 13px; }
+    .benefits-badge { border: 1px solid var(--border); border-radius: 16px; padding: 0; text-align: center; background: var(--surface); overflow: hidden; box-shadow: var(--elev-soft); }
+    .benefits-badge img { transition: transform 0.4s ease; }
+    .benefits-badge:hover img { transform: scale(1.05); }
 
     /* Motion */
     @media (prefers-reduced-motion: no-preference) {
@@ -144,7 +145,12 @@
     <!-- Header -->
     <header class="product-header white-header">
         <div class="product-header-container">
-            <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            <a href="{{ url_for('shop.show_products_page') }}" class="back-button" title="Voltar para produtos">
+                <span class="material-icons">arrow_back</span>
+            </a>
+            <a href="{{ url_for('shop.show_home_page') }}" class="product-header-logo-link">
+                <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            </a>
             <nav class="product-header-nav">
                 <a href="{{ url_for('shop.show_products_page') }}" class="product-header-link">Produtos</a>
                 <a href="{{ url_for('shop.show_cart_page') }}" class="cart-icon-product">
@@ -193,6 +199,20 @@
                     <button class="btn-add-cart" onclick="addToCart('{{ product.name }}', {{ product.price }})">Adicionar ao carrinho</button>
                     <button class="btn-buy-now" onclick="buyNow('{{ product.name }}', {{ product.price }})">Comprar agora</button>
         </div>
+                
+                <!-- Seção de Consulta de Frete -->
+                <div class="shipping-section-product" style="margin-top: 24px; padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--elev);">
+                    <h4 style="margin: 0 0 14px 0; font-size: 18px; font-weight: 600; color: var(--ink); position: relative; padding-bottom: 8px;">
+                        Calcular Frete
+                        <span style="position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(15,23,42,0.1), transparent 60%);"></span>
+                    </h4>
+                    <div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start;">
+                        <input type="text" id="cep-input-product" placeholder="00000-000" maxlength="9" style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; background: var(--surface-2); color: var(--ink); transition: border-color 0.2s ease;">
+                        <button id="calculate-shipping-btn" class="btn-buy-now" style="padding: 12px 24px; white-space: nowrap; margin: 0;">Calcular</button>
+                    </div>
+                    <div id="cep-feedback-product" style="margin-bottom: 12px; font-size: 13px; min-height: 18px; color: var(--muted);"></div>
+                    <div id="shipping-options-product"></div>
+                </div>
             </div>
         </div>
 
@@ -248,10 +268,19 @@
 
         <!-- Seção de Vídeos -->
     {% if product.videos %}
+    {% set video_titles = [
+        "Explore os Recursos",
+        "Veja em Ação",
+        "Descubra a Performance",
+        "Experiência Premium",
+        "Tecnologia em Destaque",
+        "Inovação ao Seu Alcance"
+    ] %}
     <section class="videos-section">
         <h2 class="videos-title">Vídeos do Produto</h2>
         <div class="videos-container">
             {% for video in product.videos %}
+            {% set title_index = ((loop.index - 1) % video_titles|length) %}
             <div class="video-item {% if loop.index % 2 == 0 %}video-right{% else %}video-left{% endif %}">
                 {% if loop.index % 2 == 1 %}
                 <div class="video-content">
@@ -261,12 +290,12 @@
                     </video>
                 </div>
                 <div class="video-text">
-                    <h3>Demonstração {{ loop.index }}</h3>
+                    <h3>{{ video_titles[title_index] }}</h3>
                     <p>Confira as principais funcionalidades e recursos do {{ product.name }} em ação.</p>
                 </div>
                 {% else %}
                 <div class="video-text">
-                    <h3>Demonstração {{ loop.index }}</h3>
+                    <h3>{{ video_titles[title_index] }}</h3>
                     <p>Veja como o {{ product.name }} se destaca em diferentes situações de uso.</p>
                 </div>
                 <div class="video-content">
@@ -349,8 +378,11 @@
             </div>
             <div class="benefits-visual">
                 <div class="benefits-badge">
-                    <span class="badge-text">ESCOLHA INTELIGENTE</span>
-                    <span class="badge-subtitle">Para quem busca excelência</span>
+                    {% if product.gallery and product.gallery|length > 0 %}
+                        <img src="{{ product.gallery[0] }}" alt="{{ product.name }}" style="width: 100%; height: auto; border-radius: 12px; display: block;">
+                    {% else %}
+                        <img src="{{ product.image }}" alt="{{ product.name }}" style="width: 100%; height: auto; border-radius: 12px; display: block;">
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -408,7 +440,6 @@
                     button.disabled = false;
                 }, 1600);
             } catch (e) {
-                console.error(e);
                 alert('Não foi possível adicionar ao carrinho. Tente novamente.');
             }
         }
@@ -439,7 +470,6 @@
                 document.body.appendChild(form);
                 form.submit();
             } catch (e) {
-                console.error(e);
                 alert('Erro ao iniciar checkout. Tente novamente.');
             }
         }
@@ -454,8 +484,8 @@
             
             // Reproduzir no hover
             videoItem.addEventListener('mouseover', () => {
-                video.play().catch(error => {
-                    console.log("Erro ao tentar reproduzir o vídeo: ", error);
+                video.play().catch(() => {
+                    // Erro silencioso ao reproduzir vídeo
                 });
             });
             
@@ -475,8 +505,8 @@
             entries.forEach(entry => {
                 const video = entry.target;
                 if (entry.isIntersecting) {
-                    video.play().catch(error => {
-                        console.log("Erro ao reproduzir vídeo visível: ", error);
+                    video.play().catch(() => {
+                        // Erro silencioso ao reproduzir vídeo
                     });
                 } else {
                     video.pause();
@@ -511,6 +541,101 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
+
+        // Inicializar validação de CEP na página de produto
+        function initShippingCalculator() {
+            const cepInputProduct = document.getElementById('cep-input-product');
+            const cepFeedbackProduct = document.getElementById('cep-feedback-product');
+            const shippingContainerProduct = document.getElementById('shipping-options-product');
+            const calculateBtn = document.getElementById('calculate-shipping-btn');
+
+            if (!cepInputProduct || !window.CEPValidator) {
+                // Tentar novamente após um pequeno delay se o script ainda não carregou
+                setTimeout(initShippingCalculator, 100);
+                return;
+            }
+
+            // Adicionar estilo ao input quando focado
+            cepInputProduct.addEventListener('focus', function() {
+                this.style.borderColor = 'var(--accent)';
+                this.style.outline = 'none';
+            });
+
+            cepInputProduct.addEventListener('blur', function() {
+                this.style.borderColor = 'var(--border)';
+            });
+
+            // Validação automática enquanto digita
+            window.CEPValidator.init(cepInputProduct, {
+                onValid: function(cep) {
+                    cepFeedbackProduct.textContent = '✓ CEP válido';
+                    cepFeedbackProduct.style.color = '#28a745';
+                },
+                onInvalid: function(cep) {
+                    cepFeedbackProduct.textContent = '✗ CEP inválido';
+                    cepFeedbackProduct.style.color = '#dc3545';
+                },
+                onFetch: function(data) {
+                    cepFeedbackProduct.textContent = `✓ ${data.logradouro}, ${data.bairro} - ${data.localidade}/${data.uf}`;
+                    cepFeedbackProduct.style.color = '#28a745';
+                },
+                showShipping: false,
+                shippingContainer: null
+            });
+
+            // Botão para calcular frete
+            if (calculateBtn) {
+                calculateBtn.addEventListener('click', function() {
+                    const cep = window.CEPValidator.clean(cepInputProduct.value);
+                    
+                    if (!window.CEPValidator.isValid(cep)) {
+                        cepFeedbackProduct.textContent = '✗ Por favor, insira um CEP válido';
+                        cepFeedbackProduct.style.color = '#dc3545';
+                        shippingContainerProduct.innerHTML = '';
+                        return;
+                    }
+
+                    // Buscar informações do CEP
+                    window.CEPValidator.fetch(cep).then(data => {
+                        if (data) {
+                            cepFeedbackProduct.textContent = `✓ ${data.logradouro}, ${data.bairro} - ${data.localidade}/${data.uf}`;
+                            cepFeedbackProduct.style.color = '#28a745';
+                        } else {
+                            cepFeedbackProduct.textContent = 'CEP não encontrado';
+                            cepFeedbackProduct.style.color = '#dc3545';
+                        }
+                    });
+
+                    // Calcular e exibir opções de frete
+                    const shippingOptions = window.CEPValidator.calculateShipping(cep);
+                    if (shippingOptions) {
+                        window.CEPValidator.displayShipping(shippingOptions, shippingContainerProduct);
+                    }
+                });
+
+                // Permitir calcular ao pressionar Enter
+                cepInputProduct.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        calculateBtn.click();
+                    }
+                });
+            }
+
+            // Listener para seleção de frete
+            if (shippingContainerProduct) {
+                shippingContainerProduct.addEventListener('shippingSelected', function(e) {
+                    const selected = e.detail;
+                    // Opção de frete selecionada - pode ser integrada com o sistema de checkout
+                });
+            }
+        }
+
+        // Inicializar quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initShippingCalculator);
+        } else {
+            initShippingCalculator();
+        }
     </script>
 </body>
 </html>

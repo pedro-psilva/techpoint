@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             localStorage.setItem(CART_CACHE_KEY, JSON.stringify(cartData));
         } catch (error) {
-            console.error('Erro ao salvar cache do carrinho:', error);
+            // Erro silencioso ao salvar cache
         }
     }
 
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const cached = localStorage.getItem(CART_CACHE_KEY);
             return cached ? JSON.parse(cached) : null;
         } catch (error) {
-            console.error('Erro ao carregar cache do carrinho:', error);
             return null;
         }
     }
@@ -34,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             localStorage.setItem('techpoint_selected_items', JSON.stringify([...selectedItems]));
         } catch (error) {
-            console.error('Erro ao salvar seleções:', error);
+            // Erro silencioso ao salvar seleções
         }
     }
 
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedItems = new Set(JSON.parse(cached));
             }
         } catch (error) {
-            console.error('Erro ao carregar seleções:', error);
+            // Erro silencioso ao carregar seleções
         }
     }
 
@@ -87,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderizarCarrinho(data);
             
         } catch (error) {
-            console.error('Erro ao carregar o carrinho:', error);
             // Se houver erro, tenta usar o cache
             const cachedData = carregarCacheCarrinho();
             if (cachedData) {
@@ -126,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             carregarCarrinho(); 
         } catch (error) {
-            console.error('Erro ao atualizar quantidade:', error);
+            // Erro silencioso ao atualizar quantidade
         }
     }
 
@@ -139,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             carregarCarrinho();
         } catch (error) {
-            console.error('Erro ao remover item:', error);
+            // Erro silencioso ao remover item
         }
     }
 
@@ -151,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/cart/clear', { method: 'POST' });
             carregarCarrinho();
         } catch (error) {
-            console.error('Erro ao esvaziar o carrinho:', error);
+            // Erro silencioso ao esvaziar carrinho
         }
     }
 

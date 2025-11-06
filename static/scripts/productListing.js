@@ -1,13 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM carregado, iniciando script...');
-
     const container = document.getElementById("produtos-container");
     const filtros = document.querySelectorAll('.menu-lateral .filtro');
     const cartIcon = document.querySelector('.cart-icon-product');
-    
-    console.log('Container encontrado:', container);
-    console.log('Filtros encontrados:', filtros);
-    console.log('Cart icon encontrado:', cartIcon);
 
     let allProducts = {};
     let productsArray = [];
@@ -34,29 +28,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchProducts() {
         try {
-            console.log('Buscando produtos...');
             const response = await fetch('/products');
             if (!response.ok) throw new Error('Erro ao buscar produtos');
             allProducts = await response.json();
-            console.log('Produtos carregados:', allProducts);
 
             productsArray = Object.keys(allProducts).map(key => ({
                 id: key,
                 ...allProducts[key]
             }));
 
-            console.log('Array de produtos:', productsArray);
             renderizarProdutos(productsArray);
 
         } catch (error) {
-            console.error("Erro:", error);
             container.innerHTML = "<p>Erro ao carregar produtos.</p>";
         }
     }
 
     function renderizarProdutos(lista) {
-        console.log('Renderizando produtos:', lista);
-        console.log('Container:', container);
         container.innerHTML = "";
         lista.forEach(produto => {
             const card = document.createElement("div");
@@ -112,7 +100,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert(`Erro: ${result.error || 'Não foi possível adicionar ao carrinho.'}`);
             }
         } catch (error) {
-            console.error('Erro ao adicionar ao carrinho:', error);
             alert('Erro de conexão ao adicionar ao carrinho.');
         }
     }

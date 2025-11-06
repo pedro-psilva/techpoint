@@ -24,7 +24,9 @@
     <!-- HEADER -->
     <header class="product-header white-header">
         <div class="product-header-container">
-            <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            <a href="{{ url_for('shop.show_home_page') }}" class="product-header-logo-link">
+                <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            </a>
             <nav class="product-header-nav">
                 <a href="{{ url_for('shop.show_products_page') }}" class="product-header-link">Produtos</a>
                 <a href="{{ url_for('shop.show_cart_page') }}" class="cart-icon-product">

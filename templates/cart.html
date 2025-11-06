@@ -21,6 +21,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <script src="{{ url_for('static', filename='scripts/carrinho.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/cep-validator.js') }}" defer></script>
     
 </head>
 <body>
@@ -53,9 +54,17 @@
                 <span>Subtotal</span>
                 <span id="summary-subtotal">R$ 0,00</span>
             </div>
-            <div class="summary-line">
+            
+            <div class="shipping-section" style="margin: 16px 0; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+                <label for="cep-input-cart" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Calcular Frete</label>
+                <input type="text" id="cep-input-cart" placeholder="00000-000" maxlength="9" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <div id="cep-feedback-cart" style="margin-top: 8px; font-size: 12px; min-height: 16px;"></div>
+                <div id="shipping-options-cart" style="margin-top: 12px;"></div>
+            </div>
+            
+            <div class="summary-line" id="shipping-line" style="display: none;">
                 <span>Frete</span>
-                <span>Grátis</span>
+                <span id="shipping-value">Grátis</span>
             </div>
             <div class="summary-line total">
                 <span>Total</span>
@@ -76,6 +85,76 @@
             <p>Adicione produtos da loja para vê-los aqui.</p>
         </div>
     </template>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar validação de CEP no carrinho
+            const cepInput = document.getElementById('cep-input-cart');
+            const cepFeedback = document.getElementById('cep-feedback-cart');
+            const shippingContainer = document.getElementById('shipping-options-cart');
+            const shippingLine = document.getElementById('shipping-line');
+            const shippingValue = document.getElementById('shipping-value');
+            const summaryTotal = document.getElementById('summary-total');
+            const summarySubtotal = document.getElementById('summary-subtotal');
+
+            let selectedShipping = null;
+
+            if (cepInput && window.CEPValidator) {
+                window.CEPValidator.init(cepInput, {
+                    onValid: function(cep) {
+                        cepFeedback.textContent = '✓ CEP válido';
+                        cepFeedback.style.color = '#28a745';
+                    },
+                    onInvalid: function(cep) {
+                        cepFeedback.textContent = '✗ CEP inválido';
+                        cepFeedback.style.color = '#dc3545';
+                    },
+                    onFetch: function(data) {
+                        cepFeedback.textContent = `✓ ${data.localidade}/${data.uf}`;
+                        cepFeedback.style.color = '#28a745';
+                    },
+                    showShipping: true,
+                    shippingContainer: shippingContainer
+                });
+
+                // Listener para seleção de frete
+                if (shippingContainer) {
+                    shippingContainer.addEventListener('shippingSelected', function(e) {
+                        selectedShipping = e.detail;
+                        
+                        // Atualizar linha de frete
+                        if (selectedShipping.free) {
+                            shippingValue.textContent = 'Grátis';
+                        } else {
+                            shippingValue.textContent = 'R$ ' + selectedShipping.price.toFixed(2).replace('.', ',');
+                        }
+                        shippingLine.style.display = 'flex';
+                        
+                        // Atualizar total
+                        updateTotal();
+                    });
+                }
+            }
+
+            function updateTotal() {
+                const subtotalText = summarySubtotal.textContent.replace(/[^\d,]/g, '').replace(',', '.');
+                const subtotal = parseFloat(subtotalText) || 0;
+                const shipping = selectedShipping && !selectedShipping.free ? selectedShipping.price : 0;
+                const total = subtotal + shipping;
+                
+                summaryTotal.textContent = total.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
+            }
+
+            // Observar mudanças no subtotal
+            const observer = new MutationObserver(updateTotal);
+            if (summarySubtotal) {
+                observer.observe(summarySubtotal, { childList: true, characterData: true });
+            }
+        });
+    </script>
 
 </body>
 </html>
