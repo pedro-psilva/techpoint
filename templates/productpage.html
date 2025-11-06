@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - TECHPOINT</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='brand/favicons/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='brand/favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='brand/favicons/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='brand/favicons/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='brand/favicons/site.webmanifest') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+<style>
+    :root {
+        --bg: #ffffff;               /* light background */
+        --surface: #ffffff;          /* card surface */
+        --surface-2: #fafbfc;        /* subtle surface */
+        --elev: 0 6px 24px rgba(17,24,39,0.06);
+        --elev-soft: 0 3px 14px rgba(17,24,39,0.05);
+        --border: rgba(15,23,42,0.08);
+        --ink: #0b1220;              /* main text */
+        --muted: rgba(15,23,42,0.72);
+        --muted-2: rgba(15,23,42,0.55);
+        --text: var(--ink);
+        --accent: #0f6efd;           /* project accent */
+        --accent-2: #0c5bd6;
+        --success: #28a745;
+        --hover-gray: #4b5563;      /* neutral hover color */
+        --hover-gray-bg: rgba(75,85,99,0.12); /* neutral hover bg */
+    }
+
+    body { background: var(--bg); color: var(--text); }
+
+    /* Layout */
+    .product-page-container { max-width: 1200px; margin: 24px auto 64px; padding: 0 20px; }
+    .breadcrumb { color: var(--muted-2); font-size: 13px; margin-bottom: 18px; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--ink); }
+
+    .product-main { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 960px) { .product-main { grid-template-columns: 1fr; } }
+
+    /* Gallery */
+    .product-gallery { position: static; }
+    .main-image-container { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: var(--elev); }
+    .main-image { width: 100%; height: auto; display: block; border-radius: 12px; background: #f6f7f9; transition: transform .4s ease; }
+    .main-image-container:hover .main-image { transform: scale(1.015); }
+
+    .thumbnail-gallery {
+        margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 10px;
+    }
+    .thumbnail { border: 1px solid var(--border); border-radius: 12px; padding: 6px; cursor: pointer; background: var(--surface-2); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+    .thumbnail img { width: 100%; height: 70px; object-fit: cover; border-radius: 8px; display: block; }
+    .thumbnail:hover { transform: translateY(-2px); box-shadow: var(--elev-soft); }
+    .thumbnail.active { border-color: rgba(15,110,253,.6); box-shadow: 0 0 0 4px rgba(15,110,253,.12); }
+
+    /* Info card */
+    .product-info { position: static; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--elev); }
+    .product-category { color: var(--muted-2); text-transform: uppercase; letter-spacing: .12em; font-size: 12px; }
+    .product-title { font-size: 30px; line-height: 1.15; margin: 6px 0 8px; color: var(--ink); }
+    .product-price { font-size: 24px; font-weight: 700; color: var(--ink); }
+    .product-description { color: var(--muted); margin-top: 10px; }
+
+    .product-actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; flex-wrap: nowrap; }
+    .btn-add-cart, .btn-buy-now {
+        appearance: none; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px;
+        font-weight: 600; display: inline-flex; gap: 8px; align-items: center; cursor: pointer;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    /* Ordem natural: Comprar agora, depois Adicionar ao carrinho (lado a lado) */
+
+    /* Comprar agora (primário, destacado) */
+    .btn-buy-now { background: linear-gradient(180deg, #111827, #0b1220); color: #fff; border-color: rgba(17,24,39,0.4); box-shadow: 0 8px 24px rgba(17,24,39,.16); }
+    .btn-buy-now:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(17,24,39,.22); color: var(--hover-gray); text-decoration: underline; text-decoration-color: var(--hover-gray); }
+
+    /* Adicionar ao carrinho (texto preto, sem fundo, menor) */
+    .btn-add-cart { background: transparent; border: none; color: var(--ink); box-shadow: none; padding: 6px 8px; font-size: 14px; border-radius: 8px; }
+    .btn-add-cart:hover { color: var(--hover-gray); text-decoration: underline; text-decoration-color: var(--hover-gray); transform: none; }
+    .btn-add-cart.is-added { color: var(--ink); background: var(--hover-gray-bg); box-shadow: inset 0 0 0 1px rgba(75,85,99,0.2); text-decoration: none; }
+    .btn-add-cart:disabled { cursor: not-allowed; opacity: .7; }
+
+    /* Responsivo: em telas menores, empilhar e ocupar largura total */
+    @media (max-width: 640px) {
+        .product-actions { flex-direction: column; align-items: stretch; }
+        .btn-buy-now, .btn-add-cart { width: 100%; justify-content: center; }
+        .btn-add-cart { text-align: center; }
+    }
+
+    .btn-buy-now { background: linear-gradient(180deg, #111827, #0b1220); color: #fff; border-color: rgba(17,24,39,0.4); box-shadow: 0 8px 24px rgba(17,24,39,.16); }
+    .btn-buy-now:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(17,24,39,.22); }
+
+    /* Sections */
+    .specs-section, .features-section, .videos-section, .product-differentiators, .product-benefits { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--elev); margin-top: 28px; }
+    .specs-title, .features-title, .videos-title, .differentiators-title, .benefits-title {
+        font-size: 20px; margin: 0 0 14px; position: relative; padding-bottom: 8px;
+    }
+    .specs-title:after, .features-title:after, .videos-title:after, .differentiators-title:after, .benefits-title:after {
+        content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.18), transparent 60%);
+    }
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .spec-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .spec-label { color: var(--muted-2); font-weight: 600; display: block; margin-bottom: 2px; }
+    .spec-value { color: var(--ink); display: block; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .feature-item { display: flex; gap: 10px; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+    .feature-icon { color: var(--accent); opacity: .9; }
+    .feature-text { color: var(--muted); }
+
+    .videos-container { display: flex; flex-direction: column; gap: 18px; }
+    .video-item { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
+    .video-item.video-right { grid-template-columns: .9fr 1.1fr; }
+    @media (max-width: 900px) { .video-item, .video-item.video-right { grid-template-columns: 1fr; } }
+    .video-content { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px; box-shadow: var(--elev-soft); }
+    .product-video { width: 100%; border-radius: 10px; display: block; }
+    .video-content:after { content: ""; position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); pointer-events: none; }
+
+    .differentiators-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .differentiator-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+    .differentiator-icon { color: var(--accent); margin-bottom: 6px; }
+
+    .benefits-content { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
+    @media (max-width: 900px) { .benefits-content { grid-template-columns: 1fr; } }
+    .benefits-list { color: var(--muted); display: grid; gap: 8px; margin: 0; padding-left: 18px; }
+    .benefits-badge { border: 1px dashed rgba(15,23,42,0.15); border-radius: 16px; padding: 24px; text-align: center; background: linear-gradient(180deg, rgba(15,110,253,.06), rgba(15,110,253,0)); }
+    .badge-text { font-weight: 800; letter-spacing: .06em; color: var(--ink); }
+    .badge-subtitle { color: var(--muted); font-size: 13px; }
+
+    /* Motion */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-animate] { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+        [data-animate].in { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="product-header white-header">
+        <div class="product-header-container">
+            <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            <nav class="product-header-nav">
+                <a href="{{ url_for('shop.show_products_page') }}" class="product-header-link">Produtos</a>
+                <a href="{{ url_for('shop.show_cart_page') }}" class="cart-icon-product">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="product-page-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="{{ url_for('shop.show_products_page') }}">Produtos</a> > 
+            <span>{{ product.category|title }}</span> > 
+            <span>{{ product.name }}</span>
+        </nav>
+
+        <!-- Seção principal do produto -->
+        <div class="product-main">
+            <!-- Galeria de imagens -->
+            <div class="product-gallery">
+                <div class="main-image-container">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="main-image" id="mainMedia">
+                </div>
+                
+                {% if product.gallery|default([])|length > 1 %}
+                <div class="thumbnail-gallery">
+                    {% for media in product.gallery|default([]) %}
+                    <div class="thumbnail {% if loop.first %}active{% endif %}" onclick="changeMainMedia('{{ media }}', 'image', this)">
+                        <img src="{{ media }}" alt="{{ product.name }} - Imagem {{ loop.index }}">
+            </div>
+                    {% endfor %}
+        </div>
+                {% endif %}
+        </div>
+
+            <!-- Informações do produto -->
+            <div class="product-info">
+                <div class="product-category">{{ product.category|title }}</div>
+                <h1 class="product-title">{{ product.name }}</h1>
+                <div class="product-price" data-price-cents="{{ product.price }}"></div>
+                <p class="product-description">{{ product.full_description if product.full_description else product.description }}</p>
+                
+                <div class="product-actions">
+                    <button class="btn-add-cart" onclick="addToCart('{{ product.name }}', {{ product.price }})">Adicionar ao carrinho</button>
+                    <button class="btn-buy-now" onclick="buyNow('{{ product.name }}', {{ product.price }})">Comprar agora</button>
+        </div>
+            </div>
+        </div>
+
+        <!-- Especificações Técnicas -->
+        {% if product.specs %}
+        <section class="specs-section">
+            <h2 class="specs-title">Especificações Técnicas</h2>
+            <div class="specs-grid">
+                {% for key, value in product.specs.items() %}
+                <div class="spec-item">
+                    <span class="spec-label">{{ key|title }}:</span>
+                    <span class="spec-value">{{ value }}</span>
+            </div>
+                {% endfor %}
+        </div>
+    </section>
+        {% endif %}
+
+        <!-- Características Principais -->
+        {% if product.features %}
+        <section class="features-section">
+            <h2 class="features-title">Características Principais</h2>
+            <div class="features-grid">
+                {% for feature in product.features %}
+                <div class="feature-item">
+                    <span class="material-icons feature-icon">
+                        {% if 'tela' in feature.lower() %}
+                            smartphone
+                        {% elif 'camera' in feature.lower() %}
+                            camera_alt
+                        {% elif 'processador' in feature.lower() %}
+                            memory
+                        {% elif 'bateria' in feature.lower() %}
+                            battery_charging_full
+                        {% elif 'resistente' in feature.lower() %}
+                            water_drop
+                        {% elif 'carregamento' in feature.lower() %}
+                            charging_station
+                        {% elif 's pen' in feature.lower() %}
+                            edit
+                        {% elif 'galaxy ai' in feature.lower() %}
+                            smart_toy
+                        {% else %}
+                            star
+                        {% endif %}
+                    </span>
+                    <span class="feature-text">{{ feature }}</span>
+                </div>
+                {% endfor %}
+        </div>
+    </section>
+        {% endif %}
+
+        <!-- Seção de Vídeos -->
+    {% if product.videos %}
+    <section class="videos-section">
+        <h2 class="videos-title">Vídeos do Produto</h2>
+        <div class="videos-container">
+            {% for video in product.videos %}
+            <div class="video-item {% if loop.index % 2 == 0 %}video-right{% else %}video-left{% endif %}">
+                {% if loop.index % 2 == 1 %}
+                <div class="video-content">
+                    <video class="product-video" muted loop playsinline>
+                        <source src="{{ video }}" type="video/webm">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+                <div class="video-text">
+                    <h3>Demonstração {{ loop.index }}</h3>
+                    <p>Confira as principais funcionalidades e recursos do {{ product.name }} em ação.</p>
+                </div>
+                {% else %}
+                <div class="video-text">
+                    <h3>Demonstração {{ loop.index }}</h3>
+                    <p>Veja como o {{ product.name }} se destaca em diferentes situações de uso.</p>
+                </div>
+                <div class="video-content">
+                    <video class="product-video" muted loop playsinline>
+                        <source src="{{ video }}" type="video/webm">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+
+    <!-- Seção de Diferenciais e Qualidades -->
+    <section class="product-differentiators">
+        <h2 class="differentiators-title">Por que escolher o {{ product.name }}?</h2>
+        <div class="differentiators-grid">
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">emoji_events</span>
+                </div>
+                <h3>Qualidade Premium</h3>
+                <p>Construído com os melhores materiais e tecnologia de ponta, garantindo durabilidade e performance excepcionais.</p>
+            </div>
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">speed</span>
+                </div>
+                <h3>Performance Superior</h3>
+                <p>Processamento rápido e eficiente, proporcionando uma experiência fluida e responsiva em todas as tarefas.</p>
+            </div>
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">security</span>
+                </div>
+                <h3>Segurança Avançada</h3>
+                <p>Proteção de dados e privacidade com as mais modernas tecnologias de segurança e criptografia.</p>
+            </div>
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">palette</span>
+                </div>
+                <h3>Design Inovador</h3>
+                <p>Estética moderna e funcionalidade inteligente, combinando beleza e praticidade em um só produto.</p>
+            </div>
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">verified_user</span>
+                </div>
+                <h3>Garantia Estendida</h3>
+                <p>Suporte técnico especializado e garantia completa para sua tranquilidade e satisfação total.</p>
+            </div>
+            <div class="differentiator-item">
+                <div class="differentiator-icon">
+                    <span class="material-icons">workspace_premium</span>
+                </div>
+                <h3>Valor Excepcional</h3>
+                <p>O melhor custo-benefício do mercado, oferecendo recursos premium por um preço justo e acessível.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Benefícios Específicos do Produto -->
+    <section class="product-benefits">
+        <h2 class="benefits-title">Benefícios Exclusivos do {{ product.name }}</h2>
+        <div class="benefits-content">
+            <div class="benefits-text">
+                <h3>Por que este produto é a escolha certa para você?</h3>
+                <ul class="benefits-list">
+                    <li><strong>Inovação Tecnológica:</strong> Equipado com as mais recentes tecnologias do mercado</li>
+                    <li><strong>Eficiência Energética:</strong> Consumo otimizado para máxima durabilidade da bateria</li>
+                    <li><strong>Conectividade Avançada:</strong> Compatibilidade com todos os dispositivos modernos</li>
+                    <li><strong>Interface Intuitiva:</strong> Fácil de usar, mesmo para iniciantes</li>
+                    <li><strong>Atualizações Constantes:</strong> Suporte contínuo com melhorias e novos recursos</li>
+                    <li><strong>Eco-Friendly:</strong> Produzido com materiais sustentáveis e processos eco-conscientes</li>
+                </ul>
+            </div>
+            <div class="benefits-visual">
+                <div class="benefits-badge">
+                    <span class="badge-text">ESCOLHA INTELIGENTE</span>
+                    <span class="badge-subtitle">Para quem busca excelência</span>
+                </div>
+            </div>
+        </div>
+    </section>
+        </div>
+
+    <script>
+        // Função para trocar imagem principal
+        function changeMainMedia(mediaSrc, mediaType, thumbnail) {
+            const mainImage = document.getElementById('mainMedia');
+            
+            // Remove active de todos os thumbnails
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            
+            // Adiciona active ao thumbnail clicado
+            thumbnail.classList.add('active');
+            
+            // Atualiza a imagem principal
+            mainImage.src = mediaSrc;
+        }
+        
+        // Função para adicionar ao carrinho
+        async function addToCart(productName, price) {
+            const productId = window.location.pathname.split('/').pop();
+            const button = event.target.closest('.btn-add-cart');
+            const originalContent = button.innerHTML;
+
+            try {
+                const resp = await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId, quantity: 1 })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'Falha ao adicionar ao carrinho');
+
+                // UI feedback
+                button.innerHTML = '<span class="material-icons">check</span> Adicionado!';
+                button.classList.add('is-added');
+                button.disabled = true;
+
+                // Atualiza badge do carrinho se existir
+                const badge = document.getElementById('cartCount');
+                if (badge) {
+                    const current = parseInt(badge.textContent || '0', 10) || 0;
+                    badge.textContent = String(current + 1);
+                    badge.style.display = 'flex';
+                }
+
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('is-added');
+                    button.disabled = false;
+                }, 1600);
+            } catch (e) {
+                console.error(e);
+                alert('Não foi possível adicionar ao carrinho. Tente novamente.');
+            }
+        }
+
+        // Formatar preço em BRL no padrão R$ XX.XXX,XX
+        (function formatProductPrice(){
+            const priceEl = document.querySelector('.product-price');
+            if (!priceEl) return;
+            const cents = parseInt(priceEl.getAttribute('data-price-cents') || '0', 10) || 0;
+            const value = cents / 100;
+            priceEl.textContent = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        })();
+
+        async function buyNow(productName, price) {
+            const productId = window.location.pathname.split('/').pop();
+            try {
+                // Garante que o item está no carrinho
+                await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId, quantity: 1 })
+                });
+
+                // Cria um form para POST e seguir o redirect do servidor
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/create-checkout-session';
+                document.body.appendChild(form);
+                form.submit();
+            } catch (e) {
+                console.error(e);
+                alert('Erro ao iniciar checkout. Tente novamente.');
+            }
+        }
+        
+        // (Removido) Favoritos - não utilizado nesta página
+        
+        // Controle de vídeos da seção de produtos
+        const productVideos = document.querySelectorAll('.product-video');
+        
+        productVideos.forEach(video => {
+            const videoItem = video.closest('.video-item');
+            
+            // Reproduzir no hover
+            videoItem.addEventListener('mouseover', () => {
+                video.play().catch(error => {
+                    console.log("Erro ao tentar reproduzir o vídeo: ", error);
+                });
+            });
+            
+            // Pausar quando sair do hover
+            videoItem.addEventListener('mouseout', () => {
+                video.pause();
+            });
+        });
+        
+        // Intersection Observer para vídeos visíveis
+        const videoObserverOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(error => {
+                        console.log("Erro ao reproduzir vídeo visível: ", error);
+                    });
+                } else {
+                    video.pause();
+                }
+            });
+        }, videoObserverOptions);
+        
+        // Observar todos os vídeos da seção de produtos
+        productVideos.forEach(video => {
+            videoObserver.observe(video);
+        });
+        
+        // Animação de entrada suave
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observar seções para animação
+        document.querySelectorAll('.specs-section, .features-section, .videos-section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

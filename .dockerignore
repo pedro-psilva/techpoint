@@ -1,0 +1,21 @@
+# Ignora a pasta de ambiente virtual
+venv/
+
+# Ignora arquivos de configuração de ambiente
+.env
+
+# Ignora caches do Python
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Outros comuns
+.git/
+.gitignore
+*.log
+*.tmp
+*.swp
+
+# Assets e templates são necessários na imagem - não excluir
+# static/**  # REMOVIDO - necessário para Flask servir os arquivos
+# templates/**  # REMOVIDO - necessário para Flask renderizar as páginas

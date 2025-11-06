@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>TECHPOINT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='brand/favicons/favicon.ico') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='brand/favicons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='brand/favicons/favicon-16x16.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='brand/favicons/apple-touch-icon.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='brand/favicons/site.webmanifest') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body id="pageBody"> 
+    <header class="main-header">
+        <img src="{{ url_for('static', filename='brand/techpoint-branco.svg') }}" alt="Logo Techpoint" class="header-logo">
+        <a href="{{ url_for('shop.show_products_page') }}" class="header-produtos">Produtos</a>
+    </header>
+    
+    <main>
+        <section class="hero-video-section"> 
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-line-1">Galaxy</span>
+                    <span class="hero-title-line-2">Z Fold 7</span>
+                </h1>
+                
+                <div class="hero-cta-container">
+                    <a href="https://www.samsung.com/br/smartphones/galaxy-z-fold7/" 
+                       target="_blank" 
+                       class="hero-cta">
+                       Saiba Mais
+                    </a>
+                </div>
+            </div>
+
+            <video class="hero-video" autoplay loop muted playsinline>
+                <source src="{{ url_for('static', filename='videos/Video Zfold.mp4') }}" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+        </section>
+
+        <section class="info-cards-container">
+            <div class="info-card">
+                <h5>Galaxy ZFold 7</h5>
+                <img src="{{ url_for('static', filename='images/Samsung-Mobile-Galaxy-Z-Fold7.jpg') }}" alt="Galaxy Z Fold 7">
+            </div>
+
+            <div class="info-card">
+                <h5>Galaxy S25</h5>
+                <img src="{{ url_for('static', filename='images/Galaxy S25 com fundo.jpg') }}" alt="Galaxy S25 Ultra">
+            </div>
+
+            <div class="info-card">
+                <h5>Galaxy ZFlip 7</h5>
+                <img src="{{ url_for('static', filename='images/zflip 7 com fundo.webp') }}" alt="Galaxy Z Flip 7">
+            </div>
+        </section>
+
+
+        <h1 class="main-heading">Seu celular novo está na Techpoint!</h1>
+
+        <section class="product-showcase" id="colorTransitionPoint">
+
+    <div class="product-item"> 
+        <h3>TAB 11 Ultra</h3>
+        <video class="product-video" muted loop playsinline> 
+            <source src="{{ url_for('static', filename='videos/TAB11.mp4') }}" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+        </video>
+    </div>
+
+    <div class="product-item"> 
+        <h3>Galaxy S25</h3>
+        <video class="product-video" muted loop playsinline>
+            <source src="{{ url_for('static', filename='videos/Galaxy S25 series.webm') }}" type="video/webm">
+            Seu navegador não suporta o vídeo.
+        </video>
+    </div>
+
+    <div class="product-item"> 
+        <h3>Galaxy Watch 5</h3>
+        <video class="product-video" muted loop playsinline>
+            <source src="{{ url_for('static', filename='videos/Galaxy Watch 5 Pro.mp4') }}" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+        </video>
+    </div>
+
+    <div class="product-item"> 
+        <h3>Galaxy Book4 Ultra</h3>
+        <video class="product-video" muted loop playsinline>
+            <source src="{{ url_for('static', filename='videos/Galaxy Book 4 Pro.webm') }}" type="video/webm">
+            Seu navegador não suporta o vídeo.
+        </video>
+    </div>
+</section>
+
+        <br><br>
+
+        <section class="content-and-image-section">
+            <div class="cta-text-content">
+                <h3>Os melhores produtos do mercado</h3>
+                <p>
+                    Ficou mais fácil obter o notebook dos seus sonhos. 
+                    Digite sua localização e navegue pelas melhores ofertas de notebooks disponíveis perto de você.
+                </p>
+                <p>
+                    Insira o CEP para calcular o frete:
+                </p>
+                <input type="text" placeholder="Digite seu CEP ou cidade" class="search-input-porsche">
+            </div>
+
+            <div class="cta-image-content">
+                <img src="{{ url_for('static', filename='images/imagem ao lado cep  sem fundo.webp') }}"
+                     alt="Galaxy Book4" class="cta-product-image"> 
+            </div>
+        </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkSection = document.getElementById('colorTransitionPoint');
+            const body = document.getElementById('pageBody');
+            
+            const productItems = document.querySelectorAll('.product-item');
+
+            productItems.forEach(item => {
+                const video = item.querySelector('.product-video');
+
+                item.addEventListener('mouseover', () => {
+                    if (video) {
+                        video.play().catch(error => {
+                            console.log("Erro ao tentar reproduzir o vídeo: ", error);
+                        });
+                    }
+                });
+
+                item.addEventListener('mouseout', () => {
+                    if (video) {
+                        video.pause();
+                    }
+                });
+            });
+          
+            let ticking = false;
+            
+            function checkColorTransition() {
+                if (!darkSection || ticking) return;
+                
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const rect = darkSection.getBoundingClientRect();
+                    const isDarkThemeArea = (rect.top <= window.innerHeight * 0.7) && (rect.bottom > 0);
+
+                    if (isDarkThemeArea) {
+                        body.classList.add('dark-theme');
+                    } else {
+                        body.classList.remove('dark-theme');
+                    }
+                    
+                    ticking = false;
+                });
+            }
+
+            window.addEventListener('scroll', checkColorTransition, { passive: true });
+            checkColorTransition(); 
+        });
+    </script>
+    
+    <footer class="main-footer">
+        <div class="footer-columns">
+
+            <div class="footer-column footer-contact">
+                <h3>Você tem alguma pergunta?</h3>
+                <p>Entre em contato para orientarmos:</p>
+                <input type="text" placeholder="Digite sua pergunta" class="footer-input">
+            </div>
+
+           <div class="footer-column footer-social">
+    <h3>Redes Sociais</h3>
+    <p>Entre em contato conosco através das mídias sociais:</p>
+    <div class="social-links">
+        <a href="https://www.facebook.com/techpoint" target="_blank">
+            <img src="{{ url_for('static', filename='images/facebook.png') }}" alt="Facebook" width="30">
+        </a>
+        <a href="https://www.instagram.com/techpoint" target="_blank">
+            <img src="{{ url_for('static', filename='images/instagram.png') }}" alt="Instagram" width="30">
+        </a>
+        <a href="https://www.linkedin.com/company/techpoint" target="_blank">
+            <img src="{{ url_for('static', filename='images/linkedin.png') }}" alt="LinkedIn" width="30">
+        </a>
+        <a href="https://www.whatsapp.com/company/techpoint" target="_blank">
+            <img src="{{ url_for('static', filename='images/whatsapp.png') }}" alt="WhatsApp" width="30">
+        </a>
+    </div>
+</div>
+        </div>
+
+        <div class="footer-info">
+            <p>
+                &copy; 2025 TECHPOINT BRASIL LTDA. |
+                <a href="#">Indicações legais</a> |
+                <a href="#">Política de Cancelamento</a> |
+                <a href="#">Canal de Informações</a> |
+                <a href="#">Produtos Importados</a> |
+                <a href="#">Compliance Techpoint</a> |
+                <a href="#">Open Source Produtos</a>
+            </p>
+            <p class="footer-disclaimer">
+                Nossa Política de Cancelamento permite a desistência da compra em até 7 (sete) dias corridos,
+                a contar da data de recebimento do produto, conforme estabelecido pelo Código de Defesa do Consumidor
+                (Lei Federal nº 8.078/90).
+            </p>
+        </div>
+        </footer>
+</body>
+</html>

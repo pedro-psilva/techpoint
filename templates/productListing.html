@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHPOINT - Produtos</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='brand/favicons/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='brand/favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='brand/favicons/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='brand/favicons/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='brand/favicons/site.webmanifest') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    <!-- Fonte e ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="product-header white-header">
+        <div class="product-header-container">
+            <img src="{{ url_for('static', filename='brand/techpoint-preto.svg') }}" alt="Logo Techpoint" class="product-header-logo">
+            <nav class="product-header-nav">
+                <a href="{{ url_for('shop.show_products_page') }}" class="product-header-link">Produtos</a>
+                <a href="{{ url_for('shop.show_cart_page') }}" class="cart-icon-product">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="menu-lateral">
+            <h2>Produtos</h2>
+            <ul>
+                <li><button class="filtro ativo" data-cat="todos">
+                    <span class="material-icons">apps</span>
+                    Todos
+                </button></li>
+                <li><button class="filtro" data-cat="smartphones">
+                    <span class="material-icons">smartphone</span>
+                    Smartphones
+                </button></li>
+                <li><button class="filtro" data-cat="tablets">
+                    <span class="material-icons">tablet</span>
+                    Tablets
+                </button></li>
+                <li><button class="filtro" data-cat="notebooks">
+                    <span class="material-icons">laptop</span>
+                    Notebooks
+                </button></li>
+                <li><button class="filtro" data-cat="acessorios">
+                    <span class="material-icons">watch</span>
+                    Acessórios
+                </button></li>
+            </ul>
+        </aside>
+
+        <main class="conteudo">
+            <div id="produtos-container" class="grid"></div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/productListing.js') }}" defer></script>
+</body>
+</html>
+
+
