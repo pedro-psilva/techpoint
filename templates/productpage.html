@@ -17,129 +17,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="{{ url_for('static', filename='scripts/cep-validator.js') }}"></script>
-    
-<style>
-    :root {
-        --bg: #ffffff;               /* light background */
-        --surface: #ffffff;          /* card surface */
-        --surface-2: #fafbfc;        /* subtle surface */
-        --elev: 0 6px 24px rgba(17,24,39,0.06);
-        --elev-soft: 0 3px 14px rgba(17,24,39,0.05);
-        --border: rgba(15,23,42,0.08);
-        --ink: #0b1220;              /* main text */
-        --muted: rgba(15,23,42,0.72);
-        --muted-2: rgba(15,23,42,0.55);
-        --text: var(--ink);
-        --accent: #0f6efd;           /* project accent */
-        --accent-2: #0c5bd6;
-        --success: #28a745;
-        --hover-gray: #4b5563;      /* neutral hover color */
-        --hover-gray-bg: rgba(75,85,99,0.12); /* neutral hover bg */
-    }
-
-    body { background: var(--bg); color: var(--text); }
-
-    /* Layout */
-    .product-page-container { max-width: 1200px; margin: 24px auto 64px; padding: 0 20px; }
-    .breadcrumb { color: var(--muted-2); font-size: 13px; margin-bottom: 18px; }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--ink); }
-
-    .product-main { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
-    @media (max-width: 960px) { .product-main { grid-template-columns: 1fr; } }
-
-    /* Gallery */
-    .product-gallery { position: static; }
-    .main-image-container { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: var(--elev); }
-    .main-image { width: 100%; height: auto; display: block; border-radius: 12px; background: #f6f7f9; transition: transform .4s ease; }
-    .main-image-container:hover .main-image { transform: scale(1.015); }
-
-    .thumbnail-gallery {
-        margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 10px;
-    }
-    .thumbnail { border: 1px solid var(--border); border-radius: 12px; padding: 6px; cursor: pointer; background: var(--surface-2); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
-    .thumbnail img { width: 100%; height: 70px; object-fit: cover; border-radius: 8px; display: block; }
-    .thumbnail:hover { transform: translateY(-2px); box-shadow: var(--elev-soft); }
-    .thumbnail.active { border-color: rgba(15,110,253,.6); box-shadow: 0 0 0 4px rgba(15,110,253,.12); }
-
-    /* Info card */
-    .product-info { position: static; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--elev); }
-    .product-category { color: var(--muted-2); text-transform: uppercase; letter-spacing: .12em; font-size: 12px; }
-    .product-title { font-size: 30px; line-height: 1.15; margin: 6px 0 8px; color: var(--ink); }
-    .product-price { font-size: 24px; font-weight: 700; color: var(--ink); }
-    .product-description { color: var(--muted); margin-top: 10px; }
-
-    .product-actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; flex-wrap: nowrap; }
-    .btn-add-cart, .btn-buy-now {
-        appearance: none; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px;
-        font-weight: 600; display: inline-flex; gap: 8px; align-items: center; cursor: pointer;
-        transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
-    }
-    /* Ordem natural: Comprar agora, depois Adicionar ao carrinho (lado a lado) */
-
-    /* Comprar agora (primário, destacado) */
-    .btn-buy-now { background: linear-gradient(180deg, #111827, #0b1220); color: #fff; border-color: rgba(17,24,39,0.4); box-shadow: 0 8px 24px rgba(17,24,39,.16); }
-    .btn-buy-now:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(17,24,39,.22); color: var(--hover-gray); text-decoration: underline; text-decoration-color: var(--hover-gray); }
-
-    /* Adicionar ao carrinho (texto preto, sem fundo, menor) */
-    .btn-add-cart { background: transparent; border: none; color: var(--ink); box-shadow: none; padding: 6px 8px; font-size: 14px; border-radius: 8px; }
-    .btn-add-cart:hover { color: var(--hover-gray); text-decoration: underline; text-decoration-color: var(--hover-gray); transform: none; }
-    .btn-add-cart.is-added { color: var(--ink); background: var(--hover-gray-bg); box-shadow: inset 0 0 0 1px rgba(75,85,99,0.2); text-decoration: none; }
-    .btn-add-cart:disabled { cursor: not-allowed; opacity: .7; }
-
-    /* Responsivo: em telas menores, empilhar e ocupar largura total */
-    @media (max-width: 640px) {
-        .product-actions { flex-direction: column; align-items: stretch; }
-        .btn-buy-now, .btn-add-cart { width: 100%; justify-content: center; }
-        .btn-add-cart { text-align: center; }
-    }
-
-    .btn-buy-now { background: linear-gradient(180deg, #111827, #0b1220); color: #fff; border-color: rgba(17,24,39,0.4); box-shadow: 0 8px 24px rgba(17,24,39,.16); }
-    .btn-buy-now:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(17,24,39,.22); }
-
-    /* Sections */
-    .specs-section, .features-section, .videos-section, .product-differentiators, .product-benefits { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--elev); margin-top: 28px; }
-    .specs-title, .features-title, .videos-title, .differentiators-title, .benefits-title {
-        font-size: 20px; margin: 0 0 14px; position: relative; padding-bottom: 8px;
-    }
-    .specs-title:after, .features-title:after, .videos-title:after, .differentiators-title:after, .benefits-title:after {
-        content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.18), transparent 60%);
-    }
-    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .spec-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-    .spec-label { color: var(--muted-2); font-weight: 600; display: block; margin-bottom: 2px; }
-    .spec-value { color: var(--ink); display: block; }
-
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-    .feature-item { display: flex; gap: 10px; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-    .feature-icon { color: var(--accent); opacity: .9; }
-    .feature-text { color: var(--muted); }
-
-    .videos-container { display: flex; flex-direction: column; gap: 18px; }
-    .video-item { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
-    .video-item.video-right { grid-template-columns: .9fr 1.1fr; }
-    @media (max-width: 900px) { .video-item, .video-item.video-right { grid-template-columns: 1fr; } }
-    .video-content { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px; box-shadow: var(--elev-soft); }
-    .product-video { width: 100%; border-radius: 10px; display: block; }
-    .video-content:after { content: ""; position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); pointer-events: none; }
-
-    .differentiators-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-    .differentiator-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
-    .differentiator-icon { color: var(--accent); margin-bottom: 6px; }
-
-    .benefits-content { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
-    @media (max-width: 900px) { .benefits-content { grid-template-columns: 1fr; } }
-    .benefits-list { color: var(--muted); display: grid; gap: 8px; margin: 0; padding-left: 18px; }
-    .benefits-badge { border: 1px solid var(--border); border-radius: 16px; padding: 0; text-align: center; background: var(--surface); overflow: hidden; box-shadow: var(--elev-soft); }
-    .benefits-badge img { transition: transform 0.4s ease; }
-    .benefits-badge:hover img { transform: scale(1.05); }
-
-    /* Motion */
-    @media (prefers-reduced-motion: no-preference) {
-        [data-animate] { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
-        [data-animate].in { opacity: 1; transform: translateY(0); }
-    }
-</style>
 </head>
 <body>
     <!-- Header -->
@@ -208,7 +85,7 @@
                     </h4>
                     <div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start;">
                         <input type="text" id="cep-input-product" placeholder="00000-000" maxlength="9" style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; background: var(--surface-2); color: var(--ink); transition: border-color 0.2s ease;">
-                        <button id="calculate-shipping-btn" class="btn-buy-now" style="padding: 12px 24px; white-space: nowrap; margin: 0;">Calcular</button>
+                        <button id="calculate-shipping-btn" class="btn-buy-now">Calcular</button>
                     </div>
                     <div id="cep-feedback-product" style="margin-bottom: 12px; font-size: 13px; min-height: 18px; color: var(--muted);"></div>
                     <div id="shipping-options-product"></div>
@@ -379,9 +256,9 @@
             <div class="benefits-visual">
                 <div class="benefits-badge">
                     {% if product.gallery and product.gallery|length > 0 %}
-                        <img src="{{ product.gallery[0] }}" alt="{{ product.name }}" style="width: 100%; height: auto; border-radius: 12px; display: block;">
+                        <img src="{{ product.gallery[0] }}" alt="{{ product.name }}">
                     {% else %}
-                        <img src="{{ product.image }}" alt="{{ product.name }}" style="width: 100%; height: auto; border-radius: 12px; display: block;">
+                        <img src="{{ product.image }}" alt="{{ product.name }}">
                     {% endif %}
                 </div>
             </div>
