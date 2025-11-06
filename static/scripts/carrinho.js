@@ -73,7 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Depois busca do servidor
-            const response = await fetch('/cart'); 
+            const response = await fetch('/cart', {
+                credentials: 'include' // Importante: envia cookies
+            }); 
             if (!response.ok) {
                 throw new Error(`Erro na rede: ${response.statusText}`);
             }
@@ -120,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/cart/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Importante: envia cookies
                 body: JSON.stringify({ product_id: productId, quantity: quantity })
             });
             carregarCarrinho(); 
@@ -133,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/cart/remove', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Importante: envia cookies
                 body: JSON.stringify({ product_id: productId })
             });
             carregarCarrinho();
@@ -146,7 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            await fetch('/cart/clear', { method: 'POST' });
+            await fetch('/cart/clear', { 
+                method: 'POST',
+                credentials: 'include' // Importante: envia cookies
+            });
             carregarCarrinho();
         } catch (error) {
             // Erro silencioso ao esvaziar carrinho

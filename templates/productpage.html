@@ -293,6 +293,7 @@
                 const resp = await fetch('/cart/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // Importante: envia cookies
                     body: JSON.stringify({ product_id: productId, quantity: 1 })
                 });
                 const data = await resp.json();
@@ -337,6 +338,7 @@
                 await fetch('/cart/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // Importante: envia cookies
                     body: JSON.stringify({ product_id: productId, quantity: 1 })
                 });
 

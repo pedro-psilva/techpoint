@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('/cart/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Importante: envia cookies
                 body: JSON.stringify({ product_id: productId, quantity: 1 })
             });
             const result = await response.json();

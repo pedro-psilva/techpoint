@@ -21,20 +21,37 @@ def get_products():
 
 @shop_bp.post("/cart/add")
 def add_to_cart():
-    data = request.get_json(silent=True) or {}
-    product_id = data.get("product_id")
-    quantity = int(data.get("quantity", 1))
+    try:
+        data = request.get_json(silent=True) or {}
+        product_id = data.get("product_id")
+        quantity = int(data.get("quantity", 1))
 
-    if product_id not in PRODUCTS:
-        return jsonify({"error": "Produto não encontrado"}), 404
+        if not product_id:
+            return jsonify({"error": "product_id é obrigatório"}), 400
 
-    cart = session.get("cart", {})
-    cart[product_id] = cart.get(product_id, 0) + quantity
+        if product_id not in PRODUCTS:
+            return jsonify({"error": f"Produto não encontrado: {product_id}"}), 404
 
-    session["cart"] = cart
-    session.modified = True
+        # Garantir que a sessão está funcionando
+        if not hasattr(session, 'get'):
+            return jsonify({"error": "Sessão não disponível"}), 500
 
-    return jsonify({"message": "Produto adicionado ao carrinho", "cart": cart})
+        cart = session.get("cart", {})
+        cart[product_id] = cart.get(product_id, 0) + quantity
+
+        session["cart"] = cart
+        session.modified = True
+
+        return jsonify({
+            "message": "Produto adicionado ao carrinho", 
+            "cart": cart,
+            "product_id": product_id
+        })
+    except Exception as e:
+        import traceback
+        print(f"Erro em add_to_cart: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({"error": f"Erro interno: {str(e)}"}), 500
 
 
 @shop_bp.post("/cart/remove")
@@ -112,30 +129,30 @@ def clear_cart():
 
 @shop_bp.post("/create-checkout-session")
 def create_checkout_session():
-    cart = session.get("cart", {})
-    if not cart:
-        return jsonify({"error": "Seu carrinho está vazio"}), 400
-
-    your_domain = current_app.config.get("YOUR_DOMAIN", request.host_url.rstrip("/"))
-
-    line_items = []
-    for product_id, quantity in cart.items():
-        product = PRODUCTS.get(product_id)
-        if product:
-            line_items.append({
-                'price_data': {
-                    'currency': 'brl',
-                    'product_data': {
-                        'name': product['name'],
-                        'description': f"{product.get('description','')} - {product.get('color','')}",
-                        'images': [your_domain + product['image']]
-                    },
-                    'unit_amount': product['price'],
-                },
-                'quantity': quantity,
-            })
-
     try:
+        cart = session.get("cart", {})
+        if not cart:
+            return jsonify({"error": "Seu carrinho está vazio"}), 400
+
+        your_domain = current_app.config.get("YOUR_DOMAIN", request.host_url.rstrip("/"))
+
+        line_items = []
+        for product_id, quantity in cart.items():
+            product = PRODUCTS.get(product_id)
+            if product:
+                line_items.append({
+                    'price_data': {
+                        'currency': 'brl',
+                        'product_data': {
+                            'name': product['name'],
+                            'description': f"{product.get('description','')} - {product.get('color','')}",
+                            'images': [your_domain + product['image']]
+                        },
+                        'unit_amount': product['price'],
+                    },
+                    'quantity': quantity,
+                })
+
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card', 'boleto'],
             line_items=line_items,
@@ -146,6 +163,9 @@ def create_checkout_session():
         session.pop('cart', None)
         return redirect(checkout_session.url, code=303)
     except Exception as e:
+        import traceback
+        print(f"Erro em create_checkout_session: {str(e)}")
+        print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
 

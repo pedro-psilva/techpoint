@@ -2614,7 +2614,9 @@ body.dark-theme .cta-text-content {
 .product-page-container .product-info { 
     background: var(--surface); 
     border: 1px solid var(--border); 
+    border-radius: 16px;
     box-shadow: var(--elev); 
+    padding: 32px;
 }
 
 .product-page-container .product-category { 
