@@ -187,7 +187,7 @@ PRODUCTS = {
         "color": "Grafite", 
         "description": "64 GB", 
         "price": format_price_to_cents("R$1.999,00"), 
-        "image": format_image_path("static/images/A9+5G.jpeg"),
+        "image": format_image_path("static/images/A9+5g.jpeg"),
         "full_description": "O Galaxy Tab A9+ 5G é o tablet mais acessível com conectividade 5G. Tela de 11 polegadas, processador Snapdragon 695 e conectividade 5G para navegação ultrarrápida e streaming sem interrupções.",
         "specs": {
             "tela": "11\" LCD 60Hz",
@@ -199,7 +199,7 @@ PRODUCTS = {
             "conectividade": "5G + Wi-Fi 6"
         },
         "gallery": [
-            format_image_path("static/images/A9+5G.jpeg")
+            format_image_path("static/images/A9+5g.jpeg")
         ],
         "features": [
             "Conectividade 5G ultrarrápida",
@@ -434,7 +434,7 @@ PRODUCTS = {
         "color": "Preto", 
         "description": "Galaxy AI", 
         "price": format_price_to_cents("R$4.499,00"), 
-        "image": format_image_path("static/images/Watch8classic.webp"),
+        "image": format_image_path("static/images/watch8classic.webp"),
         "full_description": "O Galaxy Watch8 Classic é o smartwatch mais avançado da Samsung. Tela AMOLED de 1.5 polegadas, processador Exynos W1000, Galaxy AI integrado e monitoramento de saúde completo. O companheiro perfeito para sua jornada fitness.",
         "specs": {
             "tela": "1.5\" AMOLED 480x480",
@@ -446,7 +446,7 @@ PRODUCTS = {
             "conectividade": "Wi-Fi + Bluetooth 5.3 + LTE"
         },
         "gallery": [
-            format_image_path("static/images/Watch8classic.webp"),
+            format_image_path("static/images/watch8classic.webp"),
             format_image_path("static/images/galaxy watch 05 capa.jpg")
         ],
         "videos": [
