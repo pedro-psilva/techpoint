@@ -7,16 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearCartButton = document.getElementById('clear-cart-button');
     const emptyCartTemplate = document.getElementById('empty-cart-template');
     
-    // Cache local do carrinho
     const CART_CACHE_KEY = 'techpoint_cart_cache';
     let selectedItems = new Set();
 
-    // Funções de cache local
     function salvarCacheCarrinho(cartData) {
         try {
             localStorage.setItem(CART_CACHE_KEY, JSON.stringify(cartData));
         } catch (error) {
-            // Erro silencioso ao salvar cache
         }
     }
 
@@ -33,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             localStorage.setItem('techpoint_selected_items', JSON.stringify([...selectedItems]));
         } catch (error) {
-            // Erro silencioso ao salvar seleções
         }
     }
 
@@ -44,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedItems = new Set(JSON.parse(cached));
             }
         } catch (error) {
-            // Erro silencioso ao carregar seleções
         }
     }
 

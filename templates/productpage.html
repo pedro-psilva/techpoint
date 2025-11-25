@@ -73,9 +73,9 @@
                 <p class="product-description">{{ product.full_description if product.full_description else product.description }}</p>
                 
                 <div class="product-actions">
-                    <button class="btn-add-cart" onclick="addToCart('{{ product.name }}', {{ product.price }})">Adicionar ao carrinho</button>
-                    <button class="btn-buy-now" onclick="buyNow('{{ product.name }}', {{ product.price }})">Comprar agora</button>
-        </div>
+                    <button class="btn-add-cart" data-product-name="{{ product.name|escape }}" data-product-price="{{ product.price }}" onclick="addToCart(this.dataset.productName, this.dataset.productPrice)">Adicionar ao carrinho</button>
+                    <button class="btn-buy-now" data-product-name="{{ product.name|escape }}" data-product-price="{{ product.price }}" onclick="buyNow(this.dataset.productName, this.dataset.productPrice)">Comprar agora</button>
+                </div>
                 
                 <!-- Seção de Consulta de Frete -->
                 <div class="shipping-section-product" style="margin-top: 24px; padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--elev);">
@@ -108,7 +108,6 @@
     </section>
         {% endif %}
 
-        <!-- Características Principais -->
         {% if product.features %}
         <section class="features-section">
             <h2 class="features-title">Características Principais</h2>
@@ -189,7 +188,6 @@
     {% endif %}
 
 
-    <!-- Seção de Diferenciais e Qualidades -->
     <section class="product-differentiators">
         <h2 class="differentiators-title">Por que escolher o {{ product.name }}?</h2>
         <div class="differentiators-grid">
@@ -271,12 +269,10 @@
         function changeMainMedia(mediaSrc, mediaType, thumbnail) {
             const mainImage = document.getElementById('mainMedia');
             
-            // Remove active de todos os thumbnails
             document.querySelectorAll('.thumbnail').forEach(thumb => {
                 thumb.classList.remove('active');
             });
             
-            // Adiciona active ao thumbnail clicado
             thumbnail.classList.add('active');
             
             // Atualiza a imagem principal
@@ -368,7 +364,6 @@
                 });
             });
             
-            // Pausar quando sair do hover
             videoItem.addEventListener('mouseout', () => {
                 video.pause();
             });
@@ -429,7 +424,6 @@
             const calculateBtn = document.getElementById('calculate-shipping-btn');
 
             if (!cepInputProduct || !window.CEPValidator) {
-                // Tentar novamente após um pequeno delay se o script ainda não carregou
                 setTimeout(initShippingCalculator, 100);
                 return;
             }

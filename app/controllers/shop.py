@@ -32,7 +32,6 @@ def add_to_cart():
         if product_id not in PRODUCTS:
             return jsonify({"error": f"Produto não encontrado: {product_id}"}), 404
 
-        # Garantir que a sessão está funcionando
         if not hasattr(session, 'get'):
             return jsonify({"error": "Sessão não disponível"}), 500
 
@@ -160,7 +159,6 @@ def create_checkout_session():
             success_url=your_domain + '/success',
             cancel_url=your_domain + '/cancel',
         )
-        # NÃO limpar o carrinho aqui - só limpar após pagamento bem-sucedido
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         import traceback
@@ -194,14 +192,12 @@ def show_product_page(product_id):
 
 @shop_bp.get("/success")
 def success():
-    # Limpar o carrinho apenas após pagamento bem-sucedido
     session.pop('cart', None)
     return "<h1>Pagamento Aprovado!</h1>"
 
 
 @shop_bp.get("/cancel")
 def cancel():
-    # Redirecionar para o carrinho quando o pagamento for cancelado
     return redirect(url_for('shop.show_cart_page'))
 
 

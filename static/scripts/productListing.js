@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let productsArray = [];
     let cartCount = 0;
 
-    // Criar a bolinha vermelha no ícone do carrinho
     const badge = document.createElement('span');
     badge.classList.add('cart-badge');
     badge.textContent = '0';
@@ -68,14 +67,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adicionarAoCarrinho(produto.id, produto, imgProduto);
             });
 
-            // Adicionar clique no card para ir para página do produto
             card.addEventListener("click", (e) => {
                 if (!e.target.classList.contains('btn-carrinho')) {
                     window.location.href = `/produto/${produto.id}`;
                 }
             });
 
-            // Adicionar cursor pointer ao card
             card.style.cursor = 'pointer';
 
             container.appendChild(card);
@@ -87,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('/cart/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', // Importante: envia cookies
+                credentials: 'include',
                 body: JSON.stringify({ product_id: productId, quantity: 1 })
             });
             const result = await response.json();
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cartCount++;
                 atualizarBadge();
                 animarCarrinho();
-                animarProdutoAoCarrinho(imgProduto); // 👈 animação adicionada aqui
+                animarProdutoAoCarrinho(imgProduto);
             } else {
                 alert(`Erro: ${result.error || 'Não foi possível adicionar ao carrinho.'}`);
             }
@@ -112,7 +109,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 400);
     }
 
-    // 🔴 Função adicionada: produto "voando" até o carrinho
     function animarProdutoAoCarrinho(img) {
         const imgClone = img.cloneNode(true);
         const imgRect = img.getBoundingClientRect();

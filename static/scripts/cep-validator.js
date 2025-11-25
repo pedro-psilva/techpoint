@@ -1,13 +1,10 @@
-// Validação e formatação de CEP
 (function() {
     'use strict';
 
-    // Função para limpar CEP (remover caracteres não numéricos)
     function cleanCEP(cep) {
         return cep.replace(/\D/g, '');
     }
 
-    // Função para formatar CEP (12345-678)
     function formatCEP(cep) {
         const cleaned = cleanCEP(cep);
         if (cleaned.length === 8) {
@@ -16,13 +13,11 @@
         return cleaned;
     }
 
-    // Função para validar CEP
     function isValidCEP(cep) {
         const cleaned = cleanCEP(cep);
         return /^[0-9]{8}$/.test(cleaned);
     }
 
-    // Função para buscar CEP na API ViaCEP
     async function fetchCEPInfo(cep) {
         const cleaned = cleanCEP(cep);
         if (!isValidCEP(cleaned)) {
@@ -57,26 +52,18 @@
         }
     }
 
-    // Função para calcular opções de frete (simulado)
     function calculateShipping(cep) {
         const cleaned = cleanCEP(cep);
         if (!isValidCEP(cleaned)) {
             return null;
         }
 
-        // Simulação de cálculo de frete baseado no CEP
-        // Em produção, isso viria de uma API real de transporte
         const cepNumber = parseInt(cleaned.substring(0, 3));
         
-        // Região Sul (80-89)
         const isSouth = cepNumber >= 80 && cepNumber < 90;
-        // Região Sudeste (01-39)
         const isSoutheast = cepNumber >= 1 && cepNumber < 40;
-        // Região Centro-Oeste (70-79)
         const isCenterWest = cepNumber >= 70 && cepNumber < 80;
-        // Região Nordeste (40-69)
         const isNortheast = cepNumber >= 40 && cepNumber < 70;
-        // Região Norte (66-69)
         const isNorth = cepNumber >= 66 && cepNumber < 70;
 
         let basePrice = 0;
@@ -92,9 +79,8 @@
             basePrice = 20.25;
         }
 
-        // Adicionar variação aleatória baseada nos últimos dígitos do CEP para simular diferentes valores
         const lastDigits = parseInt(cleaned.substring(5, 8));
-        const variation = (lastDigits % 10) * 0.15; // Variação de até 1.35
+        const variation = (lastDigits % 10) * 0.15;
         
         const expressPrice = (basePrice * 2.7) + variation;
         const standardPrice = basePrice + (variation * 0.6);
@@ -103,13 +89,13 @@
             {
                 name: 'Expresso',
                 description: 'Entrega em 1-2 dias úteis',
-                price: Math.round(expressPrice * 100) / 100, // Arredondar para 2 casas decimais
+                price: Math.round(expressPrice * 100) / 100,
                 days: '1-2 dias úteis'
             },
             {
                 name: 'Padrão',
                 description: 'Entrega em 5-7 dias úteis',
-                price: Math.round(standardPrice * 100) / 100, // Arredondar para 2 casas decimais
+                price: Math.round(standardPrice * 100) / 100,
                 days: '5-7 dias úteis'
             },
             {
@@ -122,7 +108,6 @@
         ];
     }
 
-    // Função para inicializar validação de CEP em um input
     function initCEPInput(inputElement, options = {}) {
         const {
             onValid = null,
@@ -134,14 +119,12 @@
 
         let currentCEP = '';
 
-        // Formatação automática enquanto digita
         inputElement.addEventListener('input', function(e) {
             const value = e.target.value;
             const formatted = formatCEP(value);
             e.target.value = formatted;
             currentCEP = cleanCEP(formatted);
 
-            // Validação em tempo real
             if (currentCEP.length === 8) {
                 if (isValidCEP(currentCEP)) {
                     inputElement.classList.remove('cep-invalid');
@@ -151,7 +134,6 @@
                         onValid(currentCEP);
                     }
 
-                    // Buscar informações do CEP
                     if (onFetch) {
                         fetchCEPInfo(currentCEP).then(data => {
                             if (data) {
@@ -160,7 +142,6 @@
                         });
                     }
 
-                    // Calcular frete se necessário
                     if (showShipping && shippingContainer) {
                         const shippingOptions = calculateShipping(currentCEP);
                         if (shippingOptions) {
@@ -182,7 +163,6 @@
             }
         });
 
-        // Validação ao perder foco
         inputElement.addEventListener('blur', function(e) {
             const value = cleanCEP(e.target.value);
             if (value.length > 0 && value.length < 8) {
@@ -194,11 +174,9 @@
         });
     }
 
-    // Função para exibir opções de frete
     function displayShippingOptions(options, container) {
         container.innerHTML = '';
 
-        // Verificar se estamos na página de produto (tem variáveis CSS específicas)
         const isProductPage = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() !== '';
         const borderColor = isProductPage ? 'var(--border)' : '#e0e0e0';
         const hoverBorderColor = isProductPage ? 'var(--accent)' : '#0f6efd';
@@ -252,7 +230,6 @@
             });
 
             optionDiv.addEventListener('click', function() {
-                // Remove seleção anterior
                 container.querySelectorAll('.shipping-option').forEach(opt => {
                     opt.classList.remove('selected');
                     opt.style.borderColor = borderColor;
@@ -262,14 +239,12 @@
                     opt.style.boxShadow = 'none';
                 });
 
-                // Marca como selecionado
                 this.classList.add('selected');
                 this.style.borderColor = hoverBorderColor;
                 this.style.backgroundColor = selectedBgColor;
                 this.style.borderWidth = '2px';
                 this.style.boxShadow = isProductPage ? 'var(--elev-soft)' : '0 2px 8px rgba(0,0,0,0.1)';
 
-                // Dispara evento customizado
                 const event = new CustomEvent('shippingSelected', {
                     detail: option
                 });
@@ -280,7 +255,6 @@
         });
     }
 
-    // Exportar funções para uso global
     window.CEPValidator = {
         clean: cleanCEP,
         format: formatCEP,
