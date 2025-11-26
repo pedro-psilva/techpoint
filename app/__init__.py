@@ -31,17 +31,17 @@ def create_app() -> Flask:
     if not app.secret_key:
         import secrets
         app.secret_key = secrets.token_hex(32)
-        print("⚠️  AVISO: FLASK_SECRET_KEY não configurada! Gerando chave temporária.")
-        print("⚠️  Configure FLASK_SECRET_KEY nas variáveis de ambiente do Render!")
+        print("AVISO: FLASK_SECRET_KEY não configurada! Gerando chave temporária.")
+        print("Configure FLASK_SECRET_KEY nas variáveis de ambiente do Render!")
     
     app.config["STRIPE_SECRET_KEY"] = os.getenv("STRIPE_SECRET_KEY")
     app.config["YOUR_DOMAIN"] = os.getenv("YOUR_DOMAIN", "http://127.0.0.1:5000")
     
     is_production = os.getenv("RENDER") == "true" or os.getenv("FLASK_ENV") == "production"
     app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
-    app.config["SESSION_COOKIE_SECURE"] = is_production  # True em HTTPS (Render)
+    app.config["SESSION_COOKIE_SECURE"] = is_production
     app.config["SESSION_COOKIE_HTTPONLY"] = True
-    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"  # Compatível com navegadores modernos
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     
     import stripe as stripe_lib
     if app.config["STRIPE_SECRET_KEY"]:
