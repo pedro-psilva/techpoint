@@ -1,5 +1,9 @@
 
+/* ----------------------------------------------------------------------------
+   VARIÁVEIS CSS GLOBAIS
+   ---------------------------------------------------------------------------- */
 :root {
+    /* Paleta de Cores */
     --preto: #000000;
     --cinza-escuro: #333333;
     --cinza-medio: #555555;
@@ -11,20 +15,24 @@
     --botao-desabilitado-txt: #aaaaaa;
     --vermelho-perigo: #E74C3C;
 
+    /* Fontes */
     --font-primary: "Inter", "Helvetica Neue", Arial, sans-serif;
     --font-heading: "Montserrat", "Segoe UI", sans-serif;
     --font-rajdhani: 'Rajdhani', sans-serif;
 
+    /* Espaçamentos */
     --spacing-xs: 8px;
     --spacing-sm: 16px;
     --spacing-md: 24px;
     --spacing-lg: 32px;
     --spacing-xl: 64px;
 
+    /* Bordas e Sombras */
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
     --box-shadow-subtle: 0 2px 8px rgba(0,0,0,0.05);
 
+    /* Variáveis para página de produto */
     --bg: #ffffff;
     --surface: #ffffff;
     --surface-2: #fafbfc;
@@ -42,6 +50,9 @@
     --hover-gray-bg: rgba(75,85,99,0.12);
 }
 
+/* ----------------------------------------------------------------------------
+   RESET E BASE
+   ---------------------------------------------------------------------------- */
 * {
     margin: 0;
     padding: 0;

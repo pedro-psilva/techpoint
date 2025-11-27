@@ -9,6 +9,7 @@ shop_bp = Blueprint("shop", __name__)
 
 @shop_bp.before_request
 def configure_stripe() -> None:
+    """Configura Stripe API key antes de cada requisição"""
     if not stripe.api_key:
         stripe.api_key = current_app.config.get("STRIPE_SECRET_KEY")
 
@@ -161,6 +162,8 @@ def create_checkout_session():
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         import traceback
+        print(f"Erro em create_checkout_session: {str(e)}")
+        print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
 

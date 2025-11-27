@@ -88,6 +88,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar validação de CEP no carrinho
             const cepInput = document.getElementById('cep-input-cart');
             const cepFeedback = document.getElementById('cep-feedback-cart');
             const shippingContainer = document.getElementById('shipping-options-cart');
@@ -116,10 +117,12 @@
                     shippingContainer: shippingContainer
                 });
 
+                // Listener para seleção de frete
                 if (shippingContainer) {
                     shippingContainer.addEventListener('shippingSelected', function(e) {
                         selectedShipping = e.detail;
                         
+                        // Atualizar linha de frete
                         if (selectedShipping.free) {
                             shippingValue.textContent = 'Grátis';
                         } else {
@@ -127,6 +130,7 @@
                         }
                         shippingLine.style.display = 'flex';
                         
+                        // Atualizar total
                         updateTotal();
                     });
                 }
@@ -144,6 +148,7 @@
                 });
             }
 
+            // Observar mudanças no subtotal
             const observer = new MutationObserver(updateTotal);
             if (summarySubtotal) {
                 observer.observe(summarySubtotal, { childList: true, characterData: true });

@@ -124,6 +124,7 @@
     <script src="{{ url_for('static', filename='scripts/cep-validator.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar validação de CEP
             const cepInput = document.getElementById('cep-input-index');
             const cepFeedback = document.getElementById('cep-feedback-index');
             const shippingContainer = document.getElementById('shipping-options-index');
@@ -146,9 +147,11 @@
                     shippingContainer: shippingContainer
                 });
 
+                // Listener para seleção de frete
                 if (shippingContainer) {
                     shippingContainer.addEventListener('shippingSelected', function(e) {
                         const selected = e.detail;
+                        // Opção de frete selecionada
                     });
                 }
             }
@@ -163,6 +166,7 @@
                 item.addEventListener('mouseover', () => {
                     if (video) {
                         video.play().catch(() => {
+                            // Erro silencioso ao reproduzir vídeo
                         });
                     }
                 });

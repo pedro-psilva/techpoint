@@ -117,11 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/cart/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', 
+                credentials: 'include', // Importante: envia cookies
                 body: JSON.stringify({ product_id: productId, quantity: quantity })
             });
             carregarCarrinho(); 
         } catch (error) {
+            // Erro silencioso ao atualizar quantidade
         }
     }
 
@@ -262,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartContainer.appendChild(emptyCartNode);
     }
 
+    // Função para selecionar/deselecionar todos
     function toggleSelectAll() {
         const checkboxes = document.querySelectorAll('.item-select-checkbox');
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
@@ -280,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         atualizarResumoSelecionados();
     }
 
+    // Adicionar botão "Selecionar Todos"
     function adicionarControlesSelecao() {
         const controlsDiv = document.createElement('div');
         controlsDiv.className = 'selection-controls';
@@ -298,6 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     clearCartButton.addEventListener('click', esvaziarCarrinho);
     
+    // Carregar seleções salvas e inicializar
     carregarSelecoes();
     carregarCarrinho();
     adicionarControlesSelecao();
