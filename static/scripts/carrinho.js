@@ -291,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="material-icons">check_box</span>
                 Selecionar Todos
             </button>
-            <span id="selected-count" class="selected-count">0 itens selecionados</span>
         `;
         
         cartContainer.parentNode.insertBefore(controlsDiv, cartContainer);
